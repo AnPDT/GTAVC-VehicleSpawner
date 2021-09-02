@@ -1,0 +1,53 @@
+{$CLEO .cs}
+0000:
+0006: 6@ = 0
+0006: 7@ = 0  
+:WaitKeyPress
+wait 50 ms 
+if and
+    0256: player $PLAYER_CHAR defined
+    80E0: not player $PLAYER_CHAR in_any_car 
+jf @WaitKeyPress
+if 0019: 7@ > 0 
+then 000A: 7@ += -1 
+end 
+if 05EE: key_pressed 115 
+jf @WaitKeyPress
+if 0039: 7@ == 0 
+then 0006: 6@ = 0 
+end
+if 0039: 6@ == 0 
+then 0006: 8@ = 175 
+end
+if 0039: 6@ == 1 
+then 0006: 8@ = 191 
+end
+if 0039: 6@ == 2 
+then 0006: 8@ = 145 
+end
+if 0039: 6@ == 3 
+then 0006: 8@ = 217 
+end
+0006: 7@ = 20
+if 0039: 6@ == 3
+then 0006: 6@ = 0
+else 000A: 6@ += 1
+end  
+0247: load_model 8@ 
+:LoadCar
+if 8248: not model 8@ available 
+jf @CreateCar
+wait 0 ms  
+jump @LoadCar 
+:CreateCar
+04C4: store_coords_to 0@ 1@ 2@ from_actor $PLAYER_ACTOR with_offset 0.0 4.0 1.4 
+0395: clear_area 1 at 0@ 1@ 2@ radius 3.0
+0170: 5@ = player $PLAYER_CHAR z_angle
+000B: 5@ += -90.0 
+00A5: 3@ = create_car 8@ at 0@ 1@ 2@
+0175: set_car 3@ z_angle_to 5@
+0229: set_car 3@ color_to 1 0 
+01C3: remove_references_to_car 3@
+0249: release_model 8@
+wait 500 ms  
+jump @WaitKeyPress
